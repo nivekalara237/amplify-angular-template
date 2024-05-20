@@ -3,9 +3,12 @@
     <h1>My todos</h1>
     <button (click)="createTodo()">+ new</button>
     <ul>
-        <li 
+        <li
             *ngFor="let todo of todos;">
-            {{ todo.content }}
+          <div id="todo-item">
+            <span>{{ todo.content }}</span>
+            <span [style.cursor]="'pointer'" (click)="deleteTodo(todo.id)"> x </span>
+          </div>
         </li>
     </ul>
     <div>

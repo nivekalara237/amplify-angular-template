@@ -1,0 +1,17 @@
+#todo-item {
+  display: flex;
+  justify-items: center;
+  justify-content: space-between;
+}
+
+#todo-item span:last-child {
+  cursor: pointer;
+  border-radius: 50%;
+  border: 1px #e17c08 solid;
+  padding-inline: 2px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  background: #e17c08;
+  color: white;
+}
