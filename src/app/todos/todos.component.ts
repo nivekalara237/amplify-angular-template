@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
@@ -14,6 +14,7 @@ const client = generateClient<Schema>();
 })
 export class TodosComponent implements OnInit {
   todos: any[] = [];
+  @Input({required: false, alias: "userLogger"})user: any = {};
 
   ngOnInit(): void {
     this.listTodos();
@@ -21,6 +22,7 @@ export class TodosComponent implements OnInit {
 
   listTodos() {
     try {
+      client.models.Todo.list().then(r => console.log(r));
       client.models.Todo.observeQuery().subscribe({
         next: ({ items, isSynced }) => {
           this.todos = items;
@@ -35,6 +37,7 @@ export class TodosComponent implements OnInit {
     try {
       client.models.Todo.create({
         content: window.prompt('Todo content'),
+        owner: this.user?.signInDetails?.id,
       });
       this.listTodos();
     } catch (error) {

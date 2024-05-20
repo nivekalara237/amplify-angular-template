@@ -1,10 +1,9 @@
 <!-- todos.component.html -->
 <main>
-    <h1>My todos</h1>
+    <h1>Hello {{ user?.signInDetails?.loginId }}'s todos</h1>
     <button (click)="createTodo()">+ new</button>
     <ul>
-        <li
-            *ngFor="let todo of todos;">
+        <li *ngFor="let todo of todos;">
           <div id="todo-item">
             <span>{{ todo.content }}</span>
             <span [style.cursor]="'pointer'" (click)="deleteTodo(todo.id)"> x </span>
