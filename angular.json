@@ -26,6 +26,8 @@
             ],
             "styles": [
               "node_modules/@aws-amplify/ui-angular/theme.css",
+              "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -86,6 +88,8 @@
             ],
             "styles": [
               "node_modules/@aws-amplify/ui-angular/theme.css",
+              "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
               "src/styles.css"
             ],
             "scripts": []

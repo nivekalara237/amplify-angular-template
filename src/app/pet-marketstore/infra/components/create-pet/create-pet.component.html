@@ -1,0 +1,91 @@
+<p-card class="m-6" header="Simple Card">
+  <div class="m-0">
+    <form (ngSubmit)="createOwner()" [formGroup]="form" novalidate>
+      <div class="field">
+        <label for="name"> Owner Name </label>
+        <input [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['name'].errors }" class="form-input"
+               formControlName="name" id="name"
+               pInputText
+               placeholder="Pet owner name (the vendor)" type="text">
+        @if (submitted && f['name'].errors) {
+          <p class="inline-block">
+            @if (f['name'].errors?.['required']) {
+              <span class="text-red-500">The owner name is required</span>
+            }
+
+            @if (f['name'].errors?.['maxlength']) {
+              <span class="text-red-500">The owner name didn't exceed 64 characters</span>
+            }
+            @if (f['name'].errors?.['minlength']) {
+              <span class="text-red-500">The owner name is lower than 4 characters</span>
+            }
+          </p>
+        }
+      </div>
+
+      <div class="field">
+        <label for="email"> Owner Email </label>
+        <input [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['email'].errors }"
+               formControlName="email"
+               id="email"
+               pInputText
+               placeholder="Email Address" size="small" type="email">
+        @if (submitted && f['email'].errors) {
+          @if (f['email'].errors?.['required']) {
+            <span class="text-red-500">The email is required</span>
+          }
+          @if (f['email'].errors?.['email']) {
+            <span class="text-red-500">Provide a valid email</span>
+          }
+        }
+      </div>
+
+      <div class="field">
+        <label for="phone"> Phone </label>
+        <input class="form-input" formControlName="phone"
+               id="phone"
+               pInputText
+               placeholder="Phone" type="tel">
+      </div>
+
+      <div class="field">
+        <label for="imageBlob"> Picture </label>
+        <input class="form-input" formControlName="imageBlob"
+               id="imageBlob"
+               placeholder="pick an image" type="file">
+      </div>
+
+      <div class="field">
+        <label for="bio"> Bio </label>
+        <textarea class="form-input" cols="65"
+                  formControlName="bio"
+                  id="bio"
+                  pInputTextarea
+                  placeholder="Tape a little bio of owner"
+                  rows="3" type="tel"></textarea>
+        <p class="flex align-items-start m-0 p-0 font-italic sm:text-xs">
+          <span> {{ f['bio'].value?.length || 0 }} of 512 characters </span>
+        </p>
+
+      </div>
+
+      <div class="field">
+        <button
+          (click)="resetForm()"
+          class="p-button-secondary mr-5"
+          label="Reset"
+          pButton
+          size="small">
+        </button>
+        <button
+          class="p-button-success"
+          label="Create Owner"
+          pButton
+          size="small"
+          type="submit">
+        </button>
+      </div>
+
+    </form>
+  </div>
+</p-card>
