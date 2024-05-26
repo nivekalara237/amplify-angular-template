@@ -40,13 +40,14 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
 import { BadgeModule } from 'primeng/badge';
-import { MessageService, PrimeNGConfig } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { HttpClientModule } from '@angular/common/http';
 import { CheckboxModule } from 'primeng/checkbox';
 import { StyleClassModule } from 'primeng/styleclass';
 import { ToastModule } from 'primeng/toast';
 import { PetService } from '../../services/pet.service';
 import { UploadFileToS3Service } from '../../services/upload-file-to-s3.service';
+import { CalendarModule } from 'primeng/calendar';
 
 enum PetCategory {
   DOG,
@@ -57,7 +58,7 @@ enum PetCategory {
 }
 
 @Component({
-  selector: 'app-create-pet-dialog',
+  selector: 'app-market-dialog',
   standalone: true,
   imports: [
     DialogModule,
@@ -85,6 +86,7 @@ enum PetCategory {
     CheckboxModule,
     StyleClassModule,
     ToastModule,
+    CalendarModule,
   ],
   templateUrl: './create-pet-dialog.component.html',
   styleUrl: './create-pet-dialog.component.css',
@@ -110,8 +112,7 @@ export class CreatePetDialogComponent implements OnInit, OnDestroy {
     private changeDetectorRef: ChangeDetectorRef,
     private petService: PetService,
     private messageService: MessageService,
-    private uploadService: UploadFileToS3Service,
-    private config: PrimeNGConfig
+    private uploadService: UploadFileToS3Service
   ) {
     this.form = this.formBuilder.group({
       owner: this.formBuilder.group({
@@ -301,7 +302,7 @@ export class CreatePetDialogComponent implements OnInit, OnDestroy {
                           closable: true,
                           life: 60000,
                         });
-                        setTimeout(() => this.dialogRef.close('OK'), 7000);
+                        setTimeout(() => this.dialogRef.close(resUpdate), 7000);
                       } else {
                         this.messageService.add({
                           severity: 'warning',

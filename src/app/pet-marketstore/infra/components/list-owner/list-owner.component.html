@@ -41,7 +41,7 @@
         <th></th>
         <th>Owner Name</th>
         <th>Phone & Email</th>
-        <th>Nb. pets</th>
+        <th hidden>Nb. pets</th>
         <th></th>
       </tr>
     </ng-template>
@@ -71,14 +71,23 @@
             </span>
           </div>
         </td>
-        <td>
+        <td hidden>
           <p-tag severity="warning" value="3"></p-tag>
         </td>
         <td>
           <div class="flex flex-row owner-item-actions">
-            <p-button icon="pi pi-pencil" outlined severity="primary"
+            <p-button (onClick)="ol.toggle($event)" icon="pi pi-pencil" outlined severity="primary"
                       size="small"></p-button>
-            <p-button icon="pi pi-trash" outlined severity="danger" size="small"></p-button>
+            <p-button (onClick)="ol.toggle($event)" icon="pi pi-trash" outlined severity="danger"
+                      size="small"></p-button>
+            <p-overlayPanel #ol>
+              <div class="flex flex-column justify-content-center w-17rem">
+                <div class="p-5 flex bg-orange-500 text-white justify-content-center align-items-center">
+                  <i class="fa fa-building fa-3x"></i>
+                </div>
+                <span class="flex justify-content-center"> Under construction </span>
+              </div>
+            </p-overlayPanel>
           </div>
         </td>
       </tr>

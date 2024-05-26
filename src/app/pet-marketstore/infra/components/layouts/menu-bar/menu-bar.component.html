@@ -1,4 +1,4 @@
-<p-menubar [model]="items" styleClass="w-full border-0 m-0">
+<p-menubar [model]="items" [style]="{'z-index': '9999', 'border-radius':'0'}" styleClass="w-full fixed border-0 m-0">
   <ng-template pTemplate="start">
     <svg fill="none" height="35" viewBox="0 0 33 35" width="33" xmlns="http://www.w3.org/2000/svg">
       <path
@@ -56,15 +56,23 @@
     </a>
   </ng-template>
   <ng-template pTemplate="end">
-    <button
-      class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround"
-      pRipple>
-      <p-avatar class="mr-2" image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-                shape="circle"/>
-      <span class="inline-flex flex-column">
-                <span class="font-bold">Amy Elsner</span>
-                <span class="text-sm">Admin</span>
+    <ng-container *ngIf="$user | async as user; else logout">
+      <p-menu #menu [model]="items2" popup></p-menu>
+
+      <button
+        (click)="menu.toggle($event)"
+        class="relative overflow-hidden w-full p-link flex align-items-center p-2 pl-3 text-color hover:surface-200 border-noround"
+        pRipple>
+        <p-avatar class="mr-2" image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+                  shape="circle"/>
+        <span class="inline-flex flex-column">
+                <span class="font-bold">{{ user.loginId }}</span>
+                <span class="text-sm">Connected</span>
             </span>
-    </button>
+      </button>
+    </ng-container>
+    <ng-template #logout>
+      <button (click)="login()" outlined pButton severity="secondary"> Connexion</button>
+    </ng-template>
   </ng-template>
 </p-menubar>

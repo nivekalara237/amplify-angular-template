@@ -1,21 +1,20 @@
 <p-toast
   [life]="60000"
   position="top-center"></p-toast>
-
-<p-splitter [panelSizes]="[40, 60]" styleClass="mb-5">
-  <ng-template pTemplate>
-    <div class="flex align-items-center">
+<div class="market-container">
+  <div class="market-owners">
+    <div class="w-full col">
       <ng-container *ngTemplateOutlet="owner"></ng-container>
     </div>
-  </ng-template>
-  <ng-template pTemplate>
-    <div class="w-full col flex align-items-center justify-content-center">
+  </div>
+  <div class="market-pets">
+    <div class="w-full col">
       <app-list-pet
         [ownersSelected]="null"
       ></app-list-pet>
     </div>
-  </ng-template>
-</p-splitter>
+  </div>
+</div>
 
 <ng-template #owner>
   <p-card class="mb-2">

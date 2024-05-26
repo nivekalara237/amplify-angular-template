@@ -25,7 +25,6 @@ import { IOwner } from '../../../core/domain/owner.model';
 import { TableModule } from 'primeng/table';
 import { RatingModule } from 'primeng/rating';
 import { TagModule } from 'primeng/tag';
-import { getProductsData } from './data';
 import { TabViewModule } from 'primeng/tabview';
 import { BadgeModule } from 'primeng/badge';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -39,27 +38,13 @@ import {
 } from '../list-owner/list-owner.component';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { CreatePetDialogComponent } from '../create-pet-dialog/create-pet-dialog.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ListPetComponent } from '../list-pet/list-pet.component';
 
 type CategoryBadge = { name: string; icon: string };
 
-type Product = {
-  id: string;
-  code: string;
-  description: string;
-  quantity: number;
-  name: string;
-  image: string;
-  price: number;
-  category: string;
-  rating: number;
-  inventoryStatus: string;
-};
-
 @Component({
-  selector: 'app-create-pet',
+  selector: 'app-market',
   standalone: true,
   imports: [
     CommonModule,
@@ -88,14 +73,13 @@ type Product = {
     SliderModule,
     ListOwnerComponent,
     ToastModule,
-    CreatePetDialogComponent,
     ListPetComponent,
   ],
   providers: [MessageService, DialogService, OwnerService, DynamicDialogRef],
-  templateUrl: './create-pet.component.html',
-  styleUrl: './create-pet.component.scss',
+  templateUrl: './market.component.html',
+  styleUrl: './market.component.scss',
 })
-export class CreatePetComponent implements OnInit {
+export class MarketComponent implements OnInit {
   @ViewChild('fileInput', { static: false })
   fileInput!: ElementRef<HTMLInputElement>;
   submitted = false;
@@ -122,8 +106,6 @@ export class CreatePetComponent implements OnInit {
     },
   ];
 
-  products: Product[] = getProductsData();
-
   protected form: FormGroup = new FormGroup({
     name: new FormControl(''),
     email: new FormControl(''),
@@ -131,14 +113,11 @@ export class CreatePetComponent implements OnInit {
     bio: new FormControl(''),
     imageBlob: new FormControl(''),
   });
-  protected openCreatePetDialog: boolean = false;
-  private refDialog!: DynamicDialogRef<CreatePetDialogComponent>;
 
   constructor(
     private formBuilder: FormBuilder,
     private ownerService: OwnerService,
-    private messageService: MessageService,
-    private dialogService: DialogService
+    private messageService: MessageService
   ) {}
 
   get f(): { [key: string]: AbstractControl } {
@@ -204,34 +183,13 @@ export class CreatePetComponent implements OnInit {
     });
   }
 
-  getSeverity(status: string) {
-    switch (status) {
-      case 'INSTOCK':
-        return 'success';
-      case 'LOWSTOCK':
-        return 'warning';
-      case 'OUTOFSTOCK':
-        return 'danger';
-      default:
-        return 'info';
-    }
-  }
-
-  onListOwnerEventData($event: EventData) {
-    console.log($event);
-  }
-
-  onDialogClosed(isClosed: boolean) {
-    this.openCreatePetDialog = isClosed;
-    console.log(isClosed);
-  }
+  onListOwnerEventData($event: EventData) {}
 
   private uploadPictureAndUpdate = (owner: IOwner) => {
     this.ownerService
       // @ts-ignore
       .uploadOwnerPicture(this.fileInput.nativeElement?.files?.[0])
       .subscribe((value) => {
-        this.resetForm();
         if (value.success) {
           this.messageService.add({
             severity: 'success',
@@ -266,6 +224,7 @@ export class CreatePetComponent implements OnInit {
                   closable: true,
                 });
               }
+              this.resetForm();
             });
         } else {
           this.messageService.add({

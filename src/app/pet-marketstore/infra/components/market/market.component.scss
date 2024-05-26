@@ -1,0 +1,20 @@
+#tabview-owner {
+  .p-tabview-panels {
+    padding: 0 !important;
+  }
+}
+
+.market-container {
+  display: flex;
+  flex-direction: row;
+  width: 100% !important;
+  margin-top: 2rem;
+
+  .market-owners {
+    width: 40% !important;
+  }
+
+  .market-pets {
+    width: 60% !important;
+  }
+}

@@ -1,17 +1,6 @@
 version: 1
 backend:
   phases:
-    prebuild:
-      commands:
-        - '# Install gtk-doc; download, make and install vips'
-        - yum -y install gtk-doc
-        - wget https://github.com/libvips/libvips/releases/download/v8.12.2/vips-8.12.2.tar.gz
-        - tar -xzvf vips-8.12.2.tar.gz
-        - cd vips-8.12.2
-        - ./configure
-        - make
-        - make install
-        - cd ..
     build:
       commands:
         - npm ci --cache .npm --prefer-offline
@@ -20,7 +9,7 @@ frontend:
   phases:
     build:
       commands:
-        - npm install -g @angular/cli
+        - npm install -g @angular/cli@17
         - ng version
         - ng build --configuration=production
   artifacts:

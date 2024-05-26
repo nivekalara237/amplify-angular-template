@@ -2,7 +2,9 @@
 <div id="market-container">
   <app-menu-bar *ngIf="!isAuthPage"></app-menu-bar>
   <!--      <div [@appUIAnimation]="o.isActivated ? o.activatedRoute : ''">-->
-  <div class="">
-    <router-outlet #o="outlet"></router-outlet>
+  <div [style]="{ 'margin-top': '0' }" class="relative">
+    <div [style]="{ 'padding-top': '44px' }" class="relative app-main">
+      <router-outlet #o="outlet"></router-outlet>
+    </div>
   </div>
 </div>

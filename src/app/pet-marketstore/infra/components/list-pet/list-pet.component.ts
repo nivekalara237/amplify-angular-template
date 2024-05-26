@@ -157,7 +157,10 @@ export class ListPetComponent implements OnInit, OnDestroy {
       templates: {},
     });
     this.refDialog.onClose.subscribe((value) => {
-      console.log(value);
+      if (value && Object.hasOwn(value, 'name')) {
+        this.pets.push(value);
+        this.changeDetectorRef.detectChanges();
+      }
     });
   }
 
@@ -180,7 +183,6 @@ export class ListPetComponent implements OnInit, OnDestroy {
             value.data?.forEach((value) => {
               this.pets.push(value);
             });
-            console.log(value);
             this.pageConfig.nextToken = value.nextToken;
             this.changeDetectorRef.detectChanges();
           } else {

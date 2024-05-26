@@ -1,0 +1,27 @@
+<p-galleria
+  [containerStyle]="{ 'max-width': '640px' }"
+
+  [responsiveOptions]="[{
+                breakpoint: '1024px',
+                numVisible: 5
+            },
+            {
+                breakpoint: '768px',
+                numVisible: 3
+            },
+            {
+                breakpoint: '560px',
+                numVisible: 1
+            }]"
+  [value]="$imagesPresigned | async"
+  numVisible="5"
+>
+  <ng-template let-item pTemplate="item">
+    <img [src]="item.itemImageSrc" style="width: 100%;"/>
+  </ng-template>
+  <ng-template let-item pTemplate="thumbnail">
+    <div class="grid grid-nogutter justify-content-center">
+      <img [src]="item.thumbnailImageSrc"/>
+    </div>
+  </ng-template>
+</p-galleria>

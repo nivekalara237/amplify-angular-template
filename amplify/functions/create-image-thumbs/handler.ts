@@ -19,24 +19,33 @@ export const handler: S3Handler = async (event: S3Event) => {
   );
 
   const srcBucket = process.env.AMPLIFY_PET_SHOP_BUCKET_NAME;
-  const dstBucket = process.env.TARGET_BUCKET_NAME;
   const srcKey = event.Records[0].s3.object.key;
-  const dstKey = `thumbnails/${srcKey}`;
+  console.log('BUCKET', srcBucket);
+  if (srcKey.startsWith('pets/')) {
+    const dstKey = `thumbnails/${srcKey.split('pets/')[1]}`;
 
-  const originalImage = await s3Client.send(
-    new GetObjectCommand({
+    const originalImage = await s3Client.send(
+      new GetObjectCommand({
+        Bucket: srcBucket,
+        Key: dstKey,
+      })
+    );
+    // @ts-ignore
+    const resizedImage = await sharp(originalImage).resize(128).toBuffer();
+
+    const command = new PutObjectCommand({
       Bucket: srcBucket,
-      Key: objectKeysUploaded[0],
-    })
-  );
-  // @ts-ignore
-  const resizedImage = await sharp(originalImage).resize(128).toBuffer();
+      Key: `thumbnails/${objectKeysUploaded[0]}`,
+      Body: resizedImage,
+    });
 
-  const command = new PutObjectCommand({
-    Bucket: srcBucket,
-    Key: `thumbnails/${objectKeysUploaded[0]}`,
-    Body: resizedImage,
-  });
-
-  await s3Client.send(command);
+    await s3Client
+      .send(command)
+      .then((value) => {
+        console.log(`Thumbnail uploaded for objects ${srcKey}]`, value);
+      })
+      .catch((reason) => {
+        console.error(reason);
+      });
+  }
 };

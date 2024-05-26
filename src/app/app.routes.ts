@@ -5,6 +5,7 @@ export const routes: Routes = [
   ...petmarketroutes,
   {
     path: 'home',
+    // canActivate: [AuthGuard],
     data: { title: 'Pet store market' },
     loadChildren: () =>
       import('./pet-marketstore/pet-marketstore.component').then(

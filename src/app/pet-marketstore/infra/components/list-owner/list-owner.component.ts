@@ -30,6 +30,7 @@ import { OwnerService } from '../../services/owner.service';
 import { UiImageComponent } from '../ui-image/ui-image.component';
 import { StyleClassModule } from 'primeng/styleclass';
 import { CheckboxModule } from 'primeng/checkbox';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 type PageConfig = {
   limit: number;
@@ -65,6 +66,7 @@ export type EventData = {
     UiImageComponent,
     StyleClassModule,
     CheckboxModule,
+    OverlayPanelModule,
   ],
   templateUrl: './list-owner.component.html',
   styleUrl: './list-owner.component.css',

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { TodosComponent } from './todos/todos.component';
 import { Amplify } from 'aws-amplify';
+import { Hub } from 'aws-amplify/utils';
 import outputs from '../../amplify_outputs.json';
 import {
   AmplifyAuthenticatorModule,
@@ -38,7 +39,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private primengConfig: PrimeNGConfig,
-    public authenticator: AuthenticatorService
+    public authenticator: AuthenticatorService,
+    private router: Router
   ) {
     Amplify.configure(outputs);
   }
@@ -51,5 +53,22 @@ export class AppComponent implements OnInit {
       menu: 1000,
       tooltip: 1100,
     };
+
+    this.manageAuthHub();
+  }
+
+  private manageAuthHub() {
+    Hub.listen('auth', ({ payload }) => {
+      switch (payload.event) {
+        // @ts-ignore
+        case 'signedIn': {
+          this.router.navigateByUrl('market');
+          return;
+        }
+        default:
+          console.log('Not managed');
+          return;
+      }
+    });
   }
 }
