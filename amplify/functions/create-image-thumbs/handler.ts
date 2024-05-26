@@ -1,6 +1,4 @@
 import sharp from 'sharp';
-
-import { env } from '$amplify/env/gen-image-thumbs';
 import {
   GetObjectCommand,
   PutObjectCommand,
@@ -20,8 +18,8 @@ export const handler: S3Handler = async (event: S3Event) => {
     `Upload handler invoked for objects [${objectKeysUploaded.join(', ')}]`
   );
 
-  const srcBucket = env.AMPLIFY_PET_SHOP_BUCKET_NAME;
-  const dstBucket = env.TARGET_BUCKET_NAME;
+  const srcBucket = process.env.AMPLIFY_PET_SHOP_BUCKET_NAME;
+  const dstBucket = process.env.TARGET_BUCKET_NAME;
   const srcKey = event.Records[0].s3.object.key;
   const dstKey = `thumbnails/${srcKey}`;
 

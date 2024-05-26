@@ -1,5 +1,10 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
+  "exclude": [
+    "node_modules",
+    ".amplify",
+    "./amplify"
+  ],
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
@@ -22,12 +27,7 @@
       "ES2022",
       "dom"
     ],
-    "resolveJsonModule": true,
-    "paths": {
-      "$amplify/*": [
-        "./.amplify/generated/*"
-      ]
-    }
+    "resolveJsonModule": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

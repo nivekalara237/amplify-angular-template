@@ -21,6 +21,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { CreatePetDialogComponent } from '../create-pet-dialog/create-pet-dialog.component';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DeleteS3ObjectUseCase } from '../../usecases/delete-s3-object.uc';
 
 type PageConfig = {
   limit: number;
@@ -52,6 +53,7 @@ type PageConfig = {
     MessageService,
     DynamicDialogRef,
     DialogService,
+    DeleteS3ObjectUseCase,
   ],
 })
 export class ListPetComponent implements OnInit, OnDestroy {
@@ -68,7 +70,8 @@ export class ListPetComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private changeDetectorRef: ChangeDetectorRef,
     private dialogService: DialogService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private deleteS3ObjectUseCase: DeleteS3ObjectUseCase
   ) {}
 
   ngOnDestroy(): void {
@@ -97,6 +100,9 @@ export class ListPetComponent implements OnInit, OnDestroy {
                 closable: true,
                 life: 60000,
               });
+              pet.images?.forEach((key) =>
+                this.deleteS3ObjectUseCase.execute(key)
+              );
               this.pets = [...this.pets].filter((v) => v.id !== pet.id);
               this.changeDetectorRef.detectChanges();
             } else {
