@@ -1,6 +1,9 @@
 @import 'primeflex/primeflex.min.css';
+@import "modern-normalize/modern-normalize.css";
+@import "primeicons/primeicons.css";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 
-@layer reset, primeng;
+@layer reset, normalize, primeng;
 
 body {
   margin: 0;

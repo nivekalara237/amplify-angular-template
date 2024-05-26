@@ -1,0 +1,6 @@
+::ng-deep {
+  .owner-item-actions .p-button {
+    width: auto !important;
+    padding: 6px !important;
+  }
+}

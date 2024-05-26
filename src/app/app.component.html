@@ -1,12 +1,9 @@
-<ui-pet-marketstore></ui-pet-marketstore>
+<ng-container *ngIf="isAuthPage">
+  <app-authentication></app-authentication>
+</ng-container>
 
-<!--<amplify-authenticator>-->
-<!--  <ng-template-->
-<!--    amplifySlot="authenticated"-->
-<!--    let-signOut="signOut"-->
-<!--    let-user="user">-->
-<!--    &lt;!&ndash;    <app-todos [userLogger]="user"></app-todos>&ndash;&gt;-->
 
-<!--    <button (click)="signOut()">Sign out</button>-->
-<!--  </ng-template>-->
-<!--</amplify-authenticator>-->
+<ui-pet-marketstore *ngIf="!isAuthPage"></ui-pet-marketstore>
+
+
+

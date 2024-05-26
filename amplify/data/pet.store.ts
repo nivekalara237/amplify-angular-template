@@ -5,7 +5,7 @@ enum PetCategory {
   CAT,
   BIRD,
   FISH,
-  CHIEN,
+  RABBIT,
 }
 
 export const petsSchema = {
@@ -14,10 +14,11 @@ export const petsSchema = {
       OwnerID: a.id(),
       Name: a.string().required(),
       Email: a.email().required(),
-      Phone: a.phone(),
+      Phone: a.string(),
       Bio: a.string(),
-      Pets: a.hasMany('Pet', 'ID'),
-      Picture: a.url(),
+      // Pets: a.hasMany('Pet', 'ID'),
+      // Pets: a.ref('Pet').array(),
+      Picture: a.string(),
     })
     .authorization((allow) => allow.publicApiKey()),
   PetKind: a.enum(['FEMALE', 'MALE']),
@@ -28,18 +29,18 @@ export const petsSchema = {
     .model({
       ID: a.id(),
       NickelName: a.string().required(),
-      Price: a.integer().required(),
+      Price: a.float().required(),
       Category: a.ref('PetCategorySchema').required(),
       Breed: a.string(),
       Rate: a.float().default(0.0),
       Kind: a.ref('PetKind'),
       BornDate: a.date().required(),
-      Weight: a.float(),
+      Weight: a.float().required(),
       PetBio: a.string(),
       OwnerID: a.id(),
-      Owner: a.belongsTo('PetOwner', 'OwnerID'),
-      Images: a.url().array(),
-      DefaultImage: a.url(),
+      //Owner: a.belongsTo('PetOwner', 'OwnerID'),
+      Images: a.string().array(),
+      DefaultImage: a.string(),
     })
-    .authorization((allow) => allow.authenticated()),
+    .authorization((allow) => allow.publicApiKey()),
 };

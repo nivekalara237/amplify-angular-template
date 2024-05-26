@@ -1,0 +1,87 @@
+<div class="owner-datatable">
+  <p-table
+    #dataTable
+    (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)"
+    (onRowSelect)="onRowSelected($event)"
+    (onRowUnselect)="onRowUnselected($event)"
+    [paginator]="false"
+    [rows]="pageConfig.limit"
+    [value]="owners"
+    dataKey="id"
+    scrollable
+    selectionMode="single"
+  >
+    <ng-template pTemplate="footer">
+      <tr>
+        <td colspan="6">
+          <div class="w-full flex flex-row justify-content-center align-items-center">
+            <p-button
+              (click)="prev()"
+              [disabled]="!pageConfig.prevToken"
+              icon="pi pi-chevron-left"
+              size="small"
+              styleClass="p-button-text"
+              type="button"/>
+            <p-tag severity="info" value="{{ pageConfig.limit }}"></p-tag>
+            <p-button
+              (click)="next()"
+              [disabled]="!pageConfig.nextToken"
+              icon="pi pi-chevron-right"
+              styleClass="p-button-text"
+              type="button"/>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr id="t_header">
+        <th style="width: 4rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th></th>
+        <th>Owner Name</th>
+        <th>Phone & Email</th>
+        <th>Nb. pets</th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template let-owner pTemplate="body">
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="owner"></p-tableCheckbox>
+        </td>
+        <td>
+          @if (!!owner.imageUrl) {
+            <ui-image [type]="'avatar'" avatar-shape="circle" avatar-size="large" [s3key]="owner.imageUrl"></ui-image>
+          } @else {
+            <p-avatar size="large" icon="pi pi-user"></p-avatar>
+          }
+        </td>
+        <td>{{ owner.name }}</td>
+        <td>
+          <div class="flex flex-column">
+            <span class="flex flex-row align-items-center">
+              <i class="pi pi-phone" style="font-size: 14px"></i>
+              <span class="pl-1 font-semibold" style="font-size: 13px">{{ owner.phone }}</span>
+            </span>
+            <span class="flex flex-row align-items-center">
+              <i class="pi pi-at" style="font-size: 14px"></i>
+              <span class="pl-1" style="font-size: 12px">{{ owner.email }}</span>
+            </span>
+          </div>
+        </td>
+        <td>
+          <p-tag severity="warning" value="3"></p-tag>
+        </td>
+        <td>
+          <div class="flex flex-row owner-item-actions">
+            <p-button icon="pi pi-pencil" outlined severity="primary"
+                      size="small"></p-button>
+            <p-button icon="pi pi-trash" outlined severity="danger" size="small"></p-button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

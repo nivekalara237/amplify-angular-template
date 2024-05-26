@@ -4,3 +4,7 @@ export interface BackendResponse<T> {
   errorMessage?: string | string[];
   errorCode?: string;
 }
+
+export interface BackendPageResponse<T> extends BackendResponse<T[]> {
+  nextToken?: string;
+}

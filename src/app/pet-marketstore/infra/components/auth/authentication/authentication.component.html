@@ -1,0 +1,11 @@
+<amplify-authenticator>
+  <ng-template
+    amplifySlot="authenticated"
+    let-signOut="signOut"
+    let-user="user">
+    <button (click)="signOut()"
+            class="p-button-secondary" icon="pi pi-sign-out" iconPos="left" pButton>
+      <span class="pl-2">Sign out</span>
+    </button>
+  </ng-template>
+</amplify-authenticator>

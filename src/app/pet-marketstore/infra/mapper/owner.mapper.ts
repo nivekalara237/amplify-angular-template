@@ -7,7 +7,7 @@ export class OwnerMapper {
       name: data?.Name,
       phone: data?.Phone,
       bio: data?.Bio,
-      id: data?.OwnerID,
+      id: data?.id || data?.OwnerID,
       imageUrl: data?.Picture,
     };
   };

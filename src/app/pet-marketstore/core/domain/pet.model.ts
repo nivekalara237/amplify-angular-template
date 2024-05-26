@@ -1,8 +1,8 @@
 import { AbstractDomain } from './abstract.domain';
 
 export interface IPet extends AbstractDomain {
-  id: number;
-  nickelName: string;
+  id: string;
+  name: string;
   price: number;
   weight?: number;
   breed?: string;

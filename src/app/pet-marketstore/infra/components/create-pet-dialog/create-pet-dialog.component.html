@@ -1,0 +1,345 @@
+<div class="create-pet-dialog">
+  <p-toast/>
+  <p-stepper [(activeStep)]="stepActive">
+    @if (!owner) {
+      <p-stepperPanel>
+        <ng-template let-index="index" let-onClick="onClick" pTemplate="header">
+          <button (click)="onClick.emit()" class="bg-transparent border-none inline-flex flex-column gap-2">
+          <span
+            [ngClass]="{
+                        'bg-primary border-primary': index <= stepActive,
+                        'surface-border': index > stepActive
+                    }"
+            class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center">
+            <i class="fa fa-user-nurse"></i>
+          </span>
+          </button>
+        </ng-template>
+        <ng-template let-nextCallback="nextCallback" pTemplate="content">
+          <div [formGroup]="subForm('owner')" class="flex flex-column gap-2 mx-auto"
+               style="min-height: 16rem; max-width: 20rem">
+            <div class="text-center mt-1 mb-1 text-lg font-semibold">
+              Select the pet's owner
+            </div>
+            <p-dropdown
+              [options]="owners"
+              formControlName="ownerId"
+              optionLabel="name"
+              [showClear]="true"
+              placeholder="Select the pet's owner"
+              (onChange)="onOwnerSelected($event)"
+            >
+              <ng-template pTemplate="selectedItem">
+                <div class="flex align-items-center gap-2" *ngIf="!!ownerSelected">
+                  <ui-image type="avatar" avatar-shape="circle" [s3key]="ownerSelected.imageUrl!"
+                            avatar-size="normal"></ui-image>
+                  <div>{{ ownerSelected.name }}</div>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="item" let-owner>
+                <div class="flex align-items-center gap-2">
+                  <ui-image type="avatar" avatar-shape="circle" [s3key]="owner.imageUrl!"
+                            avatar-size="normal"></ui-image>
+                  <div>{{ owner.name }}</div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+
+          </div>
+          <div class="flex pt-4 justify-content-end">
+            <p-button (onClick)="onClose()" class="mr-2" severity="contrast">Cancel</p-button>
+            <p-button [disabled]="subForm('owner').invalid" (onClick)="nextCallback.emit()" icon="pi pi-arrow-right"
+                      iconPos="right" label="Next"/>
+          </div>
+        </ng-template>
+      </p-stepperPanel>
+    }
+    <p-stepperPanel>
+      <ng-template let-index="index" let-onClick="onClick" pTemplate="header">
+        <button (click)="subForm('owner').valid ? onClick.emit(): $event.preventDefault()"
+                class="bg-transparent border-none inline-flex flex-column gap-2">
+          <span
+            [ngClass]="{
+                        'bg-primary border-primary': index <= stepActive,
+                        'surface-border': index > stepActive
+                    }"
+            class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center">
+            <i class="fa fa-dog"></i>
+          </span>
+        </button>
+      </ng-template>
+      <ng-template let-nextCallback="nextCallback" pTemplate="content">
+        <div [formGroup]="subForm('pet')" class="flex flex-column gap-2 mx-auto"
+             style="min-height: 16rem; max-width: 35rem">
+          <div class="text-center mt-3 mb-3 text-xl font-semibold">
+            Inter the information about the pet
+          </div>
+          <ng-container
+            [ngTemplateOutletContext]="{$implicit: subForm('pet').controls}"
+            [ngTemplateOutlet]="petInputForm"></ng-container>
+        </div>
+        <div class="flex pt-4 justify-content-end">
+          <p-button (onClick)="onClose()" class="mr-2" severity="contrast">Cancel</p-button>
+          <p-button (onClick)="nextCallback.emit()" [disabled]="subForm('pet').invalid" icon="pi pi-arrow-right"
+                    iconPos="right" label="Next"/>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+
+
+    <p-stepperPanel>
+      <ng-template let-index="index" let-onClick="onClick" pTemplate="header">
+        <button (click)="subForm('pet').valid ? onClick.emit(): $event.preventDefault()"
+                class="bg-transparent border-none inline-flex flex-column gap-2">
+          <span
+            [ngClass]="{
+                        'bg-primary border-primary': index <= stepActive,
+                        'surface-border': index > stepActive
+                    }"
+            class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center">
+            <i class="fa fa-images"></i>
+          </span>
+        </button>
+      </ng-template>
+      <ng-template let-nextCallback="nextCallback" pTemplate="content">
+        <div [formGroup]="subForm('pet')" class="flex flex-column gap-2 mx-auto"
+             style="min-height: 16rem; max-width: 100%">
+          <div class="text-center mt-3 mb-3 text-xl font-semibold">
+            Upload All picture regarding <span
+            class="underline text-primary-500">{{ subForm('pet').get('name')?.value }}</span>
+          </div>
+          <ng-container
+            [ngTemplateOutletContext]="{$implicit: subForm('images').controls}"
+            [ngTemplateOutlet]="imagesForm"></ng-container>
+        </div>
+        <div class="flex pt-4 justify-content-end">
+          <p-button (onClick)="onClose()" class="mr-2" severity="contrast">Cancel</p-button>
+          <p-button (onClick)="nextCallback.emit()"
+                    [disabled]="subForm('images').invalid" icon="pi pi-arrow-right"
+                    iconPos="right" label="Next"/>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel>
+      <ng-template let-index="index" let-onClick="onClick" pTemplate="header">
+        <button (click)="form.valid ? onClick.emit(): $event.preventDefault()"
+                class="bg-transparent border-none inline-flex flex-column gap-2">
+          <span
+            [ngClass]="{
+                        ' bg-primary border-primary': index <= stepActive,
+                        'surface-border': index > stepActive,
+                    }"
+            class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center">
+            <i class="fa fa-save"></i>
+          </span>
+        </button>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <div class="flex flex-column gap-2 mx-auto"
+             style="min-height: 16rem; max-width: 100%">
+          <div class="text-center mt-3 mb-3 text-xl font-semibold">
+            Everything is good. You can put
+            <span
+              class="underline text-primary-500">{{ subForm('pet').get('name')?.value }}</span>
+            on the market now!
+          </div>
+        </div>
+        <div class="flex pt-4 justify-content-end">
+          <p-button (onClick)="onClose()" class="mr-2" severity="contrast">Cancel</p-button>
+          <p-button (onClick)="onCreatePet()"
+                    [disabled]="subForm('images').invalid"
+                    icon="fa fa-save"
+                    iconPos="right"
+                    label="Save" severity="success"/>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+  </p-stepper>
+</div>
+
+<ng-template #petInputForm let-form>
+  <div [formGroup]="subForm('pet')">
+    <div class="lg:mb-4 inline-flex flex-column gap-1 w-full">
+      <label class="text-primary-500 text-lg font-semibold" for="name"> Pet Name </label>
+      <input [ngClass]="{ 'ng-invalid ng-dirty': form['name'].errors }"
+             class="bg-white-alpha-50 border-primary border-2 p-2 text-primary-500"
+             formControlName="name" id="name" pInputText
+             placeholder="Pet name"
+             type="text" value="Toutou">
+      @if (form['name'].errors) {
+        <p class="inline-block m-0 p-0" style="font-size: 10px">
+          @if (form['name'].errors['required']) {
+            <span class="text-red-500">The pet name is required</span>
+          }
+          @if (form['name'].errors['maxlength']) {
+            <span class="text-red-500">The pet name didn't exceed 64 characters</span>
+          }
+          @if (form['name'].errors['minlength']) {
+            <span class="text-red-500">The pet name is lower than 3 characters</span>
+          }
+        </p>
+      }
+    </div>
+    <div class="lg:mb-4 inline-flex flex-column gap-1 w-full">
+      <label class="text-primary-500 text-lg font-semibold" for="price">The price (must be prior to Zero) </label>
+      <input [ngClass]="{ 'ng-invalid ng-dirty': form['price'].errors }"
+             class="bg-white-alpha-50 border-primary border-2 p-2 text-primary-500"
+             formControlName="price" id="price" min="1"
+             pInputText
+             placeholder="Pet price" type="number" value="1200">
+      @if (form['price'].errors) {
+        <p class="inline-block m-0 p-0" style="font-size: 10px">
+          @if (form['price'].errors['required']) {
+            <span class="text-red-500">The pet price is required</span>
+          }
+          @if (form['price'].errors['min']) {
+            <span class="text-red-500">The price must be eager than 0</span>
+          }
+        </p>
+      }
+    </div>
+    <div class="lg:mb-4 inline-flex flex-column gap-1 w-full">
+      <label class="text-primary-500 text-lg font-semibold" for="category">The price (must be prior to Zero) </label>
+      <input [ngClass]="{ 'ng-invalid ng-dirty': form['category'].errors }"
+             class="bg-white-alpha-50 border-primary border-2 p-2 text-primary-500"
+             formControlName="category" id="category" pInputText
+             placeholder="Pet category"
+             type="text" value="CAT">
+      @if (form['category'].errors && form['category'].errors['required']) {
+        <p class="inline-block m-0 p-0" style="font-size: 10px">
+          <span class="text-red-500">The category is required</span>
+        </p>
+      }
+    </div>
+    <div class="lg:mb-4 inline-flex flex-column gap-1 w-full">
+      <label class="text-primary-500 text-lg font-semibold" for="bornDate">The Born day</label>
+      <input [ngClass]="{ 'ng-invalid ng-dirty': form['bornDate'].errors }"
+             class="bg-white-alpha-50 border-primary border-2 p-2 text-primary-500"
+             formControlName="bornDate" id="bornDate" pInputText
+             placeholder="Pet born date"
+             type="date" value="23/02/2021">
+      @if (form['bornDate'].errors && form['bornDate'].errors['required']) {
+        <p class="inline-block m-0 p-0" style="font-size: 10px">
+          <span class="text-red-500">The born day is required</span>
+        </p>
+      }
+    </div>
+
+    <div class="lg:mb-4 inline-flex flex-column gap-1 w-full">
+      <label class="text-primary-500 text-lg font-semibold" for="weight">The pet weight</label>
+      <input [ngClass]="{ 'ng-invalid ng-dirty': form['weight'].errors }"
+             class="bg-white-alpha-50 border-primary border-2 p-2 text-primary-500"
+             formControlName="weight" id="weight" pInputText
+             placeholder="Pet weight in KG"
+             type="number" value="1.3">
+      @if (form['weight'].errors && form['weight'].errors['required']) {
+        <p class="inline-block m-0 p-0" style="font-size: 10px">
+          <span class="text-red-500">The weight is required</span>
+        </p>
+      }
+    </div>
+
+    <div class="lg:mb-4 inline-flex flex-column gap-1 w-full">
+      <label class="text-primary-500 text-lg font-semibold" for="breed">Breed</label>
+      <input class="bg-white-alpha-50 border-primary border-2 p-2 text-primary-500"
+             formControlName="breed" id="breed" pInputText
+             placeholder="Breed"
+             type="text" value="XD">
+    </div>
+
+    <div class="lg:mb-4 inline-flex flex-column gap-1 w-full">
+      <label class="text-primary-500 text-lg font-semibold" for="kind">Kind of pet</label>
+      <div class="flex flex-wrap" id="kind">
+        <div class="flex align-items-center">
+          <p-radioButton formControlName="kind" id="female" inputId="female"
+                         value="FEMALE"/>
+          <label class="ml-2" for="female">
+            FEMALE
+          </label>
+        </div>
+        <div class="ml-4 flex align-items-center">
+          <p-radioButton formControlName="kind" id="male"
+                         inputId="male"
+                         value="MALE"/>
+          <label class="ml-2" for="male">
+            MALE
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:mb-4 inline-flex flex-column gap-1 w-full">
+      <label class="text-primary-500 text-lg font-semibold" for="breed">Pet description</label>
+      <textarea [value]="'Lorem ipsum..'"
+                autoResize class="bg-white-alpha-50 border-primary border-2 p-2 text-primary-500" formControlName="bio"
+                id="bio"
+                pInputTextarea
+                placeholder="Describe the pet"
+                rows="5" type="text"></textarea>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #imagesForm let-form>
+  <div [formGroup]="subForm('images')">
+    <p-fileUpload
+      (onSelect)="onSelectedFiles($event)"
+      (uploadHandler)="onUploadFiles($event)"
+      [multiple]="true"
+      accept="image/*"
+      maxFileSize="10000000">
+      <ng-template let-chooseCallback="chooseCallback"
+                   let-clearCallback="clearCallback" let-files
+                   let-uploadCallback="uploadCallback"
+                   pTemplate="header">
+        <div class="flex flex-wrap justify-content-center align-items-center flex-1 gap-2">
+          <div class="flex gap-2">
+            <p-button (onClick)="choose($event, chooseCallback)" [outlined]="true" [rounded]="true"
+                      icon="pi pi-plus"/>
+            <p-button (onClick)="clearCallback()" [disabled]="!files || files.length === 0" [outlined]="true"
+                      [rounded]="true"
+                      icon="pi pi-times" severity="danger"/>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template let-files
+                   let-removeFileCallback="removeFileCallback"
+                   let-removeUploadedFileCallback="removeUploadedFileCallback"
+                   let-uploadedFiles="uploadedFiles"
+                   pTemplate="content">
+        <div *ngIf="files?.length > 0">
+          <div class="flex flex-wrap p-0 p-2 gap-2">
+            <div *ngFor="let file of files; let idx = index"
+                 class="card m-0 p-2 border-round-sm flex flex-column border-1 surface-border align-items-center gap-1">
+              <div>
+                <img [alt]="file.name" [src]="file.objectURL" height="100" role="presentation" width="150"/>
+              </div>
+              <span class="font-semibold text-sm">{{ truncateFileName(file.name) }}</span>
+              <div class="text-xs">{{ formatSize(file.size) }}</div>
+              <div class="flex align-items-center">
+                <p-radioButton [inputId]="file.name + '-' + idx"
+                               [value]="file.name"
+                               formControlName="defaultImage"/>
+                <label [for]="file.name + '-' + idx" class="ml-2 font-semibold text-orange-400">
+                  Use as cover
+                </label>
+              </div>
+              <p-button (click)="onRemoveTemplatingFile($event, file, removeFileCallback, idx)" [outlined]="true"
+                        [rounded]="true"
+                        [style]="{ padding: '2px' }"
+                        icon="pi pi-times" severity="danger" size="small"/>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="file"></ng-template>
+      <ng-template pTemplate="empty">
+        <div class="flex align-items-center justify-content-center flex-column">
+          <i class="pi pi-cloud-upload border-2 border-circle p-2 text-8xl text-400 border-400"></i>
+          <p class="mt-2 mb-0">Drag and drop files to here to upload.</p>
+        </div>
+      </ng-template>
+    </p-fileUpload>
+  </div>
+</ng-template>

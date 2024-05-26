@@ -1,14 +1,76 @@
-<p-card class="m-6" header="Simple Card">
+<p-toast
+  [life]="60000"
+  position="top-center"></p-toast>
+
+<p-splitter [panelSizes]="[40, 60]" styleClass="mb-5">
+  <ng-template pTemplate>
+    <div class="flex align-items-center">
+      <ng-container *ngTemplateOutlet="owner"></ng-container>
+    </div>
+  </ng-template>
+  <ng-template pTemplate>
+    <div class="w-full col flex align-items-center justify-content-center">
+      <app-list-pet
+        [ownersSelected]="null"
+      ></app-list-pet>
+    </div>
+  </ng-template>
+</p-splitter>
+
+<ng-template #owner>
+  <p-card class="mb-2">
+    <p-header hidden="hidden">
+      <div class="p-1" hidden="hidden">
+        @for (category of petCategories; track category.name; let idx = $index) {
+          <p-chip pRipple styleClass="pl-0 pr-3 m-1 cursor-pointer">
+          <span class="bg-primary border-circle sm:w-2rem sm:h-2rem flex align-items-center justify-content-center">
+            <i [class]="category.icon"></i>
+          </span>
+            <span class="ml-2 text-primary-700 lg:font-bold font-medium">
+            {{ category.name }}
+          </span>
+          </p-chip>
+        }
+      </div>
+    </p-header>
+    <p-tabView id="tabview-owner" scrollable="true" styleClass="p-0 m-O">
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <div class="flex align-items-center gap-2">
+            <span class="font-bold white-space-nowrap m-0">
+              List Owners
+            </span>
+          </div>
+        </ng-template>
+        <app-list-owner (eventData)="onListOwnerEventData($event)"></app-list-owner>
+      </p-tabPanel>
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <div class="flex align-items-center gap-2">
+            <p-badge severity="success" value="+"></p-badge>
+            <span class="font-bold white-space-nowrap m-0">
+              Create New Owner
+            </span>
+          </div>
+        </ng-template>
+        <ng-container [ngTemplateOutlet]="createOwnerForm"></ng-container>
+      </p-tabPanel>
+    </p-tabView>
+  </p-card>
+</ng-template>
+
+
+<ng-template #createOwnerForm>
   <div class="m-0">
     <form (ngSubmit)="createOwner()" [formGroup]="form" novalidate>
-      <div class="field">
-        <label for="name"> Owner Name </label>
-        <input [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['name'].errors }" class="form-input"
-               formControlName="name" id="name"
+      <div class="lg:mb-4 inline-flex flex-column gap-1 w-full">
+        <label class="text-primary-500 text-lg font-semibold" for="name"> Owner Name </label>
+        <input [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['name'].errors }"
+               class="bg-white-alpha-50 border-primary border-2 p-2 text-primary-500" formControlName="name" id="name"
                pInputText
                placeholder="Pet owner name (the vendor)" type="text">
         @if (submitted && f['name'].errors) {
-          <p class="inline-block">
+          <p class="inline-block m-0 p-0" style="font-size: 10px">
             @if (f['name'].errors?.['required']) {
               <span class="text-red-500">The owner name is required</span>
             }
@@ -23,58 +85,59 @@
         }
       </div>
 
-      <div class="field">
-        <label for="email"> Owner Email </label>
+      <div class="lg:mb-4 inline-flex flex-column gap-1 w-full">
+        <label class="text-primary-500 font-semibold" for="email"> Owner Email </label>
         <input [ngClass]="{ 'ng-invalid ng-dirty': submitted && f['email'].errors }"
-               formControlName="email"
-               id="email"
-               pInputText
-               placeholder="Email Address" size="small" type="email">
+               class="bg-white-alpha-50 border-primary border-2 p-2 text-primary-500"
+               formControlName="email" id="email"
+               pInputText placeholder="Email Address" size="small" type="email">
         @if (submitted && f['email'].errors) {
-          @if (f['email'].errors?.['required']) {
-            <span class="text-red-500">The email is required</span>
-          }
-          @if (f['email'].errors?.['email']) {
-            <span class="text-red-500">Provide a valid email</span>
-          }
+          <p class="inline-block m-0 p-0" style="font-size: 10px">
+            @if (f['email'].errors!['required']) {
+              <span class="text-red-500">The email is required</span>
+            }
+            @if (f['email'].errors!['email']) {
+              <span class="text-red-500">Provide a valid email</span>
+            }
+          </p>
         }
       </div>
 
-      <div class="field">
-        <label for="phone"> Phone </label>
-        <input class="form-input" formControlName="phone"
-               id="phone"
-               pInputText
+      <div class="lg:mb-4 inline-flex flex-column gap-1 w-full">
+        <label class="text-primary-500 font-semibold" for="phone"> Phone </label>
+        <input class="bg-white-alpha-50 border-primary border-2 p-2 text-primary-500" formControlName="phone"
+               id="phone" pInputText
                placeholder="Phone" type="tel">
       </div>
 
-      <div class="field">
-        <label for="imageBlob"> Picture </label>
-        <input class="form-input" formControlName="imageBlob"
-               id="imageBlob"
+      <div class="lg:mb-4 inline-flex flex-column gap-1 w-full">
+        <label class="text-primary-500 font-semibold" for="imageBlob"> Picture </label>
+        <input #fileInput accept="image/*"
+               class="bg-white-alpha-50 border-primary border-2 p-2 text-primary-500"
+               formControlName="imageBlob" hidden id="imageBlob"
                placeholder="pick an image" type="file">
+        <p-button (onClick)="fileInput.click()"
+                  [label]=" fileInput.files?.[0]?.name || 'pick an image'" icon="pi pi-upload" iconPos="left"/>
       </div>
 
-      <div class="field">
-        <label for="bio"> Bio </label>
-        <textarea class="form-input" cols="65"
-                  formControlName="bio"
-                  id="bio"
+      <div class="lg:mb-4 inline-flex flex-column gap-1 w-full">
+        <label class="text-primary-500 font-semibold" for="bio"> Bio </label>
+        <textarea autoResize
+                  class="bg-white-alpha-50 border-primary border-2 p-2 text-primary-500"
+                  formControlName="bio" id="bio"
                   pInputTextarea
                   placeholder="Tape a little bio of owner"
                   rows="3" type="tel"></textarea>
         <p class="flex align-items-start m-0 p-0 font-italic sm:text-xs">
           <span> {{ f['bio'].value?.length || 0 }} of 512 characters </span>
         </p>
-
       </div>
 
-      <div class="field">
+      <div class="lg:mb-4 inline-flex flex-row gap-1 w-full">
         <button
           (click)="resetForm()"
           class="p-button-secondary mr-5"
-          label="Reset"
-          pButton
+          label="Reset" pButton
           size="small">
         </button>
         <button
@@ -88,4 +151,4 @@
 
     </form>
   </div>
-</p-card>
+</ng-template>

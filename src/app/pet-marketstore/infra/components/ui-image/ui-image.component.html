@@ -1,0 +1,10 @@
+@if (type === 'standard') {
+  <img [ngSrc]="imageUrl" fill alt="image-{{ s3key }}"/>
+} @else {
+  <p-avatar
+    [image]="imageUrl"
+    [shape]="shape"
+    [size]="size"></p-avatar>
+}
+
+

@@ -12,6 +12,9 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'ui-pet-marketstore',
@@ -24,6 +27,7 @@ import {
     ContentBodyComponent,
     SidebarComponent,
     FooterComponent,
+    ToastModule,
   ],
   templateUrl: './pet-marketstore.component.html',
   styleUrl: './pet-marketstore.component.css',
@@ -67,4 +71,15 @@ import {
     ]),
   ],
 })
-export class PetMarketstoreComponent {}
+export class PetMarketstoreComponent {
+  isAuthPage = false;
+
+  constructor(private activeRoute: ActivatedRoute, private router: Router) {
+    router.events
+      .pipe(filter((value) => value instanceof NavigationEnd))
+
+      .subscribe((value) => {
+        this.isAuthPage = (value as NavigationEnd).url.includes('auth');
+      });
+  }
+}

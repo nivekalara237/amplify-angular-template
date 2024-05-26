@@ -7,9 +7,11 @@ import {
   AmplifyAuthenticatorModule,
   AuthenticatorService,
 } from '@aws-amplify/ui-angular';
-import { JsonPipe } from '@angular/common';
-import { PrimeNGConfig } from 'primeng/api';
+import { JsonPipe, NgIf } from '@angular/common';
+import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { PetMarketstoreComponent } from './pet-marketstore/pet-marketstore.component';
+import { ButtonModule } from 'primeng/button';
+import { AuthenticationComponent } from './pet-marketstore/infra/components/auth/authentication/authentication.component';
 
 Amplify.configure(outputs);
 
@@ -18,16 +20,21 @@ Amplify.configure(outputs);
   standalone: true,
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
+  providers: [MessageService],
   imports: [
     RouterOutlet,
     TodosComponent,
     AmplifyAuthenticatorModule,
     JsonPipe,
     PetMarketstoreComponent,
+    NgIf,
+    ButtonModule,
+    AuthenticationComponent,
   ],
 })
 export class AppComponent implements OnInit {
   title = 'amplify-angular-template';
+  protected isAuthPage = window.location.href.includes('auth');
 
   constructor(
     private primengConfig: PrimeNGConfig,

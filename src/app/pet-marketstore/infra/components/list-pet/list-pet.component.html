@@ -1,0 +1,96 @@
+<p-table
+  (onHeaderCheckboxToggle)="onHeaderCheckboxToggle($event)"
+  [tableStyle]="{'min-width': '60rem'}" [value]="pets">
+  <ng-template pTemplate="caption">
+    <div class="flex align-items-center justify-content-between">
+      Pets
+      <p-button icon="pi pi-refresh"/>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="caption">
+    <div class="flex flex-wrap justify-content-end gap-2">
+      <p-button (onClick)="addPet()" icon="pi pi-plus" label="Add New Pet" severity="success" text/>
+      <p-button (onClick)="deletePet(null!)" badge="3" badgeClass="p-badge-contrast" icon="pi pi-trash"
+                label="Delete selected"
+                outlined
+                severity="danger"/>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
+      <th>Pet Name</th>
+      <th>Image</th>
+      <th>Price</th>
+      <th>Category</th>
+      <th>Rate</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template let-pet pTemplate="body">
+    <tr>
+      <td>
+        <p-tableCheckbox [value]="pet"></p-tableCheckbox>
+      </td>
+      <td>{{ pet.name }}</td>
+      <td>
+        @if (!!pet.coverImage) {
+          <ui-image [type]="'avatar'"
+                    avatar-shape="circle"
+                    avatar-size="large"
+                    [s3key]="pet.coverImage"></ui-image>
+        } @else {
+          <p-avatar size="large" icon="fa fa-dog"></p-avatar>
+        }
+      </td>
+      <td>{{ pet.price | currency:'USD' }}</td>
+      <td>{{ pet.category }}</td>
+      <td>
+        <p-rating [(ngModel)]="pet.rate" [cancel]="false" [readonly]="true"/>
+      </td>
+      <td>
+        <p-tag *ngIf="pet.breed" [severity]="getSeverity()" [value]="pet.breed"/>
+      </td>
+      <td>
+        <p-button (onClick)="deletePet(pet)" icon="fa fa-trash" outlined severity="danger"></p-button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="summary">
+    <div *ngIf="!!pageConfig.nextToken && pageConfig.nextToken.length"
+         class="flex align-items-center justify-content-center">
+      <a (click)="$event.preventDefault();showMore()" href="#"> show more</a>
+    </div>
+  </ng-template>
+</p-table>
+
+<p-confirmDialog #cd>
+  <ng-template let-message pTemplate="headless">
+    <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+      <div class="border-circle bg-red-300 inline-flex justify-content-center align-items-center h-6rem w-6rem">
+        <i class="pi pi-question text-white  text-5xl"></i>
+      </div>
+      <span class="font-bold text-2xl block mb-2 mt-4">
+                {{ message.header }}
+            </span>
+      <p class=" mb-0">{{ message.message }}</p>
+      <div class="flex align-items-center gap-2 mt-4">
+        <button
+          (click)="cd.reject()"
+          class="p-button-outlined w-8rem "
+          icon="fa fa-times" label="Cancel"
+          pButton>
+        </button>
+        <button
+          (click)="cd.accept()"
+          class="w-8rem"
+          label="Save" pButton
+          severity="success">
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>

@@ -11,4 +11,11 @@ export const routes: Routes = [
         (c) => c.PetMarketstoreComponent
       ),
   },
+  {
+    path: 'auth',
+    loadComponent: () =>
+      import(
+        './pet-marketstore/infra/components/auth/authentication/authentication.component'
+      ).then((c) => c.AuthenticationComponent),
+  },
 ];
